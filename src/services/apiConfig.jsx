@@ -1,5 +1,5 @@
 // apiConfig.js
-const URL = `https://nova-subwork-backend.onrender.com`;
+const URL = `https://nova-subwork-backend-a9q5.onrender.com`;
 //const URL = `http://192.168.86.224:4000`
 
 export const API_URL_login = `${URL}/login`;
