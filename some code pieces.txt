@@ -1,0 +1,345 @@
+import QrModal from "src/components/QrModal";
+import QrModal from "src/components/QrModal";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Button,
+  FlatList,
+  SafeAreaView,
+  Dimensions,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import Icon from "react-native-vector-icons/Ionicons";
+import ActionComponents from "src/components/ActionComponents";
+// import { ActionComponentsForDeposit} from '../../components/actionComponentsForDeposit';
+// import ContainerService from 'src/screens/appServices/ContainerService';
+import {
+  SREEN_HEIGHT_0_ON_POURCENT,
+  SREEN_HEIGHT_1_ON_POURCENT,
+  SREEN_HEIGHT_2_ON_POURCENT,
+  SREEN_HEIGHT_3_ON_POURCENT,
+  getIconSize,
+} from "src/screens/dimension";
+import ActionComponentsForDeposit from "src/components/actionComponentsForDeposit";
+import { Link, router } from "expo-router";
+import { useAuth } from "src/hook/useAuth";
+import { ouvrirLaDB, creerLesTables } from "app/db/database";
+import AppSQL from "provider/AppSQL";
+import { AppSQLContext } from "provider/AppSQL";
+import { useSQLiteContext } from "expo-sqlite";
+
+const HomeScreen = ({}) => {
+  const da = new Date();
+  const [recentTransaction, setRecentTransactions] = useState([])
+  const [loading, setLoading] = useState(false)
+  
+  // const recentTransaction = [
+  //   {
+  //     id: 1,
+  //     name: "Sam",
+  //     date: new Date(Date.now()),
+  //     prix: 5000,
+  //     type: "depot",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Julia",
+  //     date: new Date(Date.now()),
+  //     prix: 4000,
+  //     type: "depot",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Mia",
+  //     date: new Date(Date.now()),
+  //     prix: 2000,
+  //     type: "retrait",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Belviane",
+  //     date: new Date(Date.now()),
+  //     prix: 5000,
+  //     type: "depot",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Samanta",
+  //     date: new Date(Date.now()),
+  //     prix: 4000,
+  //     type: "depot",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Mia",
+  //     date: new Date(Date.now()),
+  //     prix: 2000,
+  //     type: "retrait",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Nabila",
+  //     date: new Date(Date.now()),
+  //     prix: 2000,
+  //     type: "retrait",
+  //   },
+  // ];
+
+  const db = useSQLiteContext();
+
+  const handleReadUsers = async () => {
+    try {
+      const users = await db.getAllAsync(`SELECT * FROM Users;`);
+      Alert.alert("Number of users", `${users.length}`);
+    } catch (error) {
+      Alert.alert("Erreur");
+      console.log("An error occured" + error);
+    }
+  };
+
+  const insertTransactions = async (transaction={}) => {
+    // try {
+    //   recentTransaction.map(async (transaction) => {
+    //     await db.runAsync("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)",
+    //       transaction.id, transaction.name, transaction.date.toLocaleDateString(), 
+    //       transaction.prix, transaction.type
+    //     );
+
+    //     console.log("Added all transactions status:  Ok")
+    //   });
+    //   //console.log("Added all transactions status:  Ok")
+    // } catch (error) {
+    //   console.log(error)
+    // }
+    await db.runAsync("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)",
+          transaction.id, transaction.name, transaction.date.toLocaleDateString(), 
+          transaction.prix, transaction.type
+    );
+    return "Success"
+  };
+
+  const readAllTransactions = async ()=>{
+    setLoading(true)
+    try {
+      const data = await db.getAllAsync("SELECT * FROM Transactions;")
+      // console.log(data[0].date.toString())
+      setRecentTransactions(data)
+      setLoading(false)
+      Alert.alert(`${data.length}`)
+    } catch (error) {
+      console.log("Error")
+    }
+  }
+
+  const dropTransactions = async ()=>{
+    //await db.execAsync("DROP TABLE Transactions;")
+    //readAllTransactions()
+  }
+
+  useEffect(() => {
+    // handleReadUsers();
+    // insertTransactions()
+    
+    // async function getData(){
+    //   const data =  await readAllTransactions()
+    //   //Alert.alert(`${data.length}`)
+    //   setLoading(false)
+    //   return data
+    // }
+    // setRecentTransactions(getData())
+    readAllTransactions()
+    //dropTransactions()
+  }, []);
+
+
+
+
+  ///// _layout.jsx
+
+  
+// function Layout() {
+//   const { isAuthenticated } = useAuth();
+//  // Si l'utilisateur n'est pas authentifié, redirigez vers la page de connexion
+//   if (!isAuthenticated) {
+//     // return <Redirect href="/(auth)/login" />;
+//     return (
+//       <Stack screenOptions={{ headerShown: false }}>
+//         <Stack.Screen name="(auth)" />
+//       </Stack>
+//     );
+//   }
+//   // Si l'utilisateur est authentifié, affichez les routes principales
+//   return <Slot />;
+//   // return (
+//   //   <Stack screenOptions={{ headerShown: false }}>
+//   //     <Stack.Screen name="(home)" />
+//   //   </Stack>
+//   //   // <Tabs
+//   //   //   screenOptions={{
+//   //   //     headerShown: false,
+//   //   //     tabBarActiveTintColor: '#3b82f6',
+//   //   //     tabBarInactiveTintColor: '#64748b',
+//   //   //     tabBarStyle: {
+//   //   //       backgroundColor: '#ffffff',
+//   //   //       borderTopWidth: 0,
+//   //   //       elevation: 5,
+//   //   //     },
+//   //   //   }}
+//   //   // >
+//   //   //   <Tabs.Screen
+//   //   //     name="index"
+//   //   //     options={{
+//   //   //       title: 'Accueil',
+//   //   //       tabBarIcon: ({ color, size }) => (
+//   //   //         <Ionicons name="home" size={size} color={color} />
+//   //   //       ),
+//   //   //     }}
+//   //   //   />
+//   //   //   {/* Ajoutez d'autres onglets ici si nécessaire */}
+//   //   // </Tabs>
+//   // );
+// }
+
+// function AppContent() {
+//   const { isAuthenticated } = useAuth();
+
+//   return (
+//     <SafeAreaProvider>
+//       <StatusBar barStyle="light-content" />
+//       {!isAuthenticated ? (
+//         <Stack screenOptions={{ headerShown: false }}>
+//           <Stack.Screen name="(auth)" />
+//         </Stack>
+//       ) : (
+//         <Tabs
+//           screenOptions={{
+//             headerShown: false,
+//             tabBarActiveTintColor: '#3b82f6',
+//             tabBarInactiveTintColor: '#64748b',
+//             tabBarStyle: {
+//               backgroundColor: '#ffffff',
+//               borderTopWidth: 0,
+//               elevation: 5,
+//             },
+//           }}
+//         >
+//           <Tabs.Screen
+//             name="(home)"
+//             options={{
+//               title: 'Accueil',
+//               tabBarIcon: ({ color, size }) => (
+//                 <Ionicons name="home" size={size} color={color} />
+//               ),
+//             }}
+//           />
+//           {/* <Tabs.Screen
+//             name="(Transaction)"
+//             options={{
+//               title: 'Profil',
+//               tabBarIcon: ({ color, size }) => (
+//                 <Ionicons name="person" size={size} color={color} />
+//               ),
+//             }}
+//           /> */}
+//           {/* <Tabs.Screen
+//             name="(settings)"
+//             options={{
+//               title: 'Paramètres',
+//               tabBarIcon: ({ color, size }) => (
+//                 <Ionicons name="settings" size={size} color={color} />
+//               ),
+//             }}
+//           /> */}
+//         </Tabs>
+//       )}
+//     </SafeAreaProvider>
+//   );
+// }
+
+// // import { Stack, Tabs } from 'expo-router';
+// // import { AuthProvider, useAuth } from '../src/hook/useAuth';
+// // import { SafeAreaProvider } from 'react-native-safe-area-context';
+// // import { StatusBar } from 'react-native';
+// // import { View, Text } from 'react-native';
+
+// // export default function RootLayout() {
+// //   return (
+// //     <AuthProvider>
+// //       {/* <Layout /> */}
+// //       <AppContent />
+// //     </AuthProvider>
+// //   );
+// // }
+
+// // function AppContent() {
+// //   const { isAuthenticated } = useAuth();
+
+// //   return (
+// //     <SafeAreaProvider>
+// //       <StatusBar barStyle="light-content" />
+// //       {!isAuthenticated ? (
+// //         <Stack screenOptions={{ headerShown: false }}>
+// //           <Stack.Screen name="(auth)" />
+// //         </Stack>
+// //       ) : (
+// //         <Tabs screenOptions={{ headerShown: false }}>
+// //           <Tabs.Screen
+// //             name="(home)"
+// //             options={{ title: 'Accueil' }}
+// //           />
+// //           <Tabs.Screen
+// //             name="(Transaction)"
+// //             options={{ title: 'Profil' }}
+// //           />
+// //           {/* <Tabs.Screen
+// //             name="settings"
+// //             options={{ title: 'Paramètres' }}
+// //           /> */}
+// //         </Tabs>
+// //       )}
+// //     </SafeAreaProvider>
+// //   );
+// // }
+
+// // // import { Stack, Tabs } from 'expo-router';
+// // // import { useAuth, AuthProvider } from '../src/hook/useAuth';
+// // // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+// // // import { StatusBar } from 'react-native';
+
+// // // export default function Layout() {
+// // function Layout() {
+// //   const { isAuthenticated } = useAuth();
+
+// //   if (!isAuthenticated) {
+// //     return (
+// //       <Stack>
+// //         <Stack.Screen name="(auth)" options={{
+// //           headerShown: false,
+// //         }} />
+// //       </Stack>
+// //     );
+// //   }
+
+// //   return (
+// //         <Stack>
+// //           <Stack.Screen
+// //             name="(app)"
+// //             options={{
+// //               headerShown: false,
+// //             }}
+// //           />
+// //         </Stack>
+// //     // <Tabs screenOptions={{ headerShown: false }}>
+// //     //   <Tabs.Screen name="home" />
+// //     //   <Tabs.Screen name="profile" />
+// //     //   <Tabs.Screen name="settings" />
+// //     // </Tabs>
+// //   );
+// // }
+
+

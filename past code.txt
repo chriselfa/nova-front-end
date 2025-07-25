@@ -1,0 +1,587 @@
+
+
+//Index.tsx at the entry
+
+import QrModal from 'src/components/QrModal';
+import {  View, Text, Image, TouchableOpacity, StyleSheet, Button, FlatList, SafeAreaView, Dimensions } from 'react-native'
+import React, { useEffect, useState }  from 'react';
+import { StatusBar } from 'expo-status-bar';
+import Icon from 'react-native-vector-icons/Ionicons';
+import ActionComponents from 'src/components/ActionComponents';
+// import { ActionComponentsForDeposit} from '../../components/actionComponentsForDeposit';
+// import ContainerService from 'src/screens/appServices/ContainerService';
+import { SREEN_HEIGHT_0_ON_POURCENT, SREEN_HEIGHT_1_ON_POURCENT, SREEN_HEIGHT_2_ON_POURCENT,
+    SREEN_HEIGHT_3_ON_POURCENT, getIconSize } from 'src/screens/dimension';
+import ActionComponentsForDeposit from 'src/components/actionComponentsForDeposit';
+import { Link, router } from 'expo-router';
+import { useAuth } from 'src/hook/useAuth';
+import { ouvrirLaDB, creerLesTables } from 'app/db/database';
+
+const HomeScreen = async ({
+  // navigation
+}) => {
+
+  // useEffect(async()=>{
+  //   const db = await ouvrirLaDB()
+  //   return ()=> creerLesTables(db)
+  // }, [])
+
+  const da = new Date ();
+  const recentTransaction = [
+    {
+      id:1,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Sam",
+      date:new Date(Date.now()),
+      prix:5000,
+      type:'depot',
+    },
+    {
+      id:2,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Julia",
+      date:new Date(Date.now()),
+      prix:4000,
+      type:'depot',
+    },
+    {
+      id:3,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Mia",
+      date:new Date(Date.now()),
+      prix:2000,
+      type:'retrait',
+    },
+    {
+      id:4,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Belviane",
+      date:new Date(Date.now()),
+      prix:5000,
+      type:'depot',
+    },
+    {
+      id:5,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Samanta",
+      date:new Date(Date.now()),
+      prix:4000,
+      type:'depot',
+    },
+    {
+      id:6,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Mia",
+      date:new Date(Date.now()),
+      prix:2000,
+      type:'retrait',
+    },
+    {
+      id:7,
+      //imageUrl:require("../assets/images/20240413_081541.jpg"),
+      name:"Nabila",
+      date:new Date(Date.now()),
+      prix:2000,
+      type:'retrait',
+    }
+  ]
+  const renderItems =({item})=>{
+    return(
+      <View style={styles.itemstories}>
+        <View style={{flexDirection:'row'}}>
+        <Image
+            source={item.imageUrl}
+            style={{height:50, width:50, borderRadius:25}}
+          />
+          <View style={{marginHorizontal:10}}>
+       
+            <Text style={{fontWeight:'bold', fontSize:15}}>
+              {item.name}
+            </Text>
+            <Text style={{color:"#ccc", fontWeight:'800'}}>
+              {item.date.toLocaleDateString()}
+            </Text>
+          </View>
+        </View>
+        <View style={{justifyContent:'center', marginRight:10}}>
+          {
+            item.type === "depot"? 
+            (
+            <Text style={{color:'green'}}>+${item.prix}</Text>
+            ):(
+              <Text style={{color:'red'}}>-${item.prix}</Text> 
+            )
+          }
+        
+        </View> 
+      </View>
+    )
+  }
+   
+
+  const [isStatusBarVisible, setIsStatusBarVisible] = useState(false);
+const toggleStatusBar = () => {
+  setIsStatusBarVisible(!isStatusBarVisible)
+}
+const { user, logout } = useAuth();
+const [modalVisible, setModalVisible] = useState(false);
+  return (
+    <View style = {styles.container} >
+
+<QrModal
+  visible={modalVisible}
+  onClose={() => setModalVisible(false)}
+  qrValue={
+  // qrValue={JSON.stringify({
+    // userId: user?.phone,
+    // action: 'withdraw',
+    // timestamp: new Date().toISOString(),
+   `https://goo.gl/maps/YXxqp5Eupy9eMrEy9?g_st=awb`
+  // })}
+  }
+  
+  // Exemple de personnalisation :
+  overlayColor="rgba(0,0,0,0.8)"
+  modalBackgroundColor="#07143F"
+  titleStyle={{ borderBottomWidth: 1, borderBottomColor: 'gold' }}
+  titleTextStyle={{ color: 'gold' }}
+  qrColor="gold"
+  qrBackgroundColor="#07143F"
+  qrLogo={require('src/assets/icon.png')}
+  descriptionTextStyle={{ color: 'white' }}
+  closeButtonBackgroundColor="gold"
+  closeButtonTextColor="#07143F"
+  closeButtonBorderRadius={20}
+/>
+
+      <View style={{
+        width: "100%",
+        height: 'auto',
+        flexDirection: "column",
+        position:"absolute", 
+        justifyContent: "center",
+        // backgroundColor: 'white',
+        zIndex: 20,
+        flex: 1
+      }}>
+      <View style={styles.Balancecontainer}>
+        <View style={{ 
+          backgroundColor:"#07143F",
+          width:"70%", height:150, padding:10, margin:5,borderRadius:15,}}>
+          <Text style={{fontSize:20, color:'white'}}>Hello ,</Text>
+          <Text style={styles.name}>{user?.nom || "Guest"}</Text>
+          {console.log("sdfv  sd", user?.nom)}
+          {console.log("sdfvsd",user)}
+          {/* {console.log(logout())} */}
+          {/* <Text style={{fontSize:20, color:'white'}}>Your balance is:</Text> */}
+        </View>
+        <View style={styles.Accountbalance}>
+          <View style={{
+            // justifyContent:'space-between',
+            // alignContent:'center',
+            // alignItems:'center',
+            // flex:1,
+            // backgroundColor:"#07143F", 
+            // flexDirection:'column',
+            paddingLeft:10, 
+            margin:5,
+            marginRight: 10
+            }}> 
+            
+            <ActionComponents 
+                style = {{fontWeight:'bold'}} 
+                onPress={() => logout()} 
+                iconName="log-out-outline" 
+                size={getIconSize()} 
+                text={"Logout"}
+              />
+              <ActionComponents 
+                style={{fontWeight:'bold'}} 
+                onPress={() => setModalVisible(true)} 
+                // iconName="qr-code" 
+                iconName="qr-code-outline" 
+                // iconName="qr-code-sharp" 
+                size={getIconSize()} 
+                text={"QR Code"}
+              />  
+          </View>
+        </View>
+      </View>
+      <Text style={{marginHorizontal:15,fontWeight:"bold",fontSize:18}}>
+      RECENT TRANSACTIONS</Text>
+      </View>
+        <View style={{
+          width: '100%',
+          height: 200
+        }}/>    
+        <View style={{ flex:3,}}>
+        
+        
+        <FlatList
+          data={recentTransaction}
+          keyExtractor={item =>item.id}
+          renderItem={renderItems}
+          style={{height:"40%"}}
+        />
+        </View>
+      <View style={{
+        // backgroundColor:"#5480B3",
+         flexDirection:"row", alignItems:"center", justifyContent:'space-evenly', height:SREEN_HEIGHT_2_ON_POURCENT,}}>
+        {/* <ActionComponentsForDeposit onPress={()=>navigation.navigate("Deposit")} iconName="cloud-upload-outline" size={getIconSize()} text={"Deposit"}/> */}
+        <ActionComponentsForDeposit 
+          onPress={"./Withdraw"} 
+          iconName="cloud-download-outline" 
+          size={getIconSize()} 
+          text={"Withdraw"}
+        />
+        <ActionComponentsForDeposit 
+          onPress={"./Send"} 
+          iconName="paper-plane-outline" 
+          size={getIconSize()} 
+          text={"Send"}
+        />
+        <ActionComponentsForDeposit 
+          onPress={"./Send"} 
+          iconName="scan" 
+          // iconName="scan-outline"  
+          size={getIconSize()} 
+          text={"Scan QR Code"}
+        />
+      </View>
+      {/* <View style={{flex: 2, alignItems:"center", marginHorizontal:10,}}> */}
+      {/* menu de navigation des ervices de notre application */}
+              {/* <ContainerService items={items}  style={styles.item }/>  */}
+              {/* {console.log(navigation)}  */}
+            {/* </View> */}
+     
+    </View>
+  )
+  // container
+}
+
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    paddingTop: 0,
+    // backgroundColor:"#ADADAD", #C1E8FF
+    backgroundColor:"white", 
+    // marginBottom:'10%', 
+    // paddingBottom: SREEN_HEIGHT_1_ON_POURCENT,  
+    // backgroundColor:"#5483B3", 
+  },
+  header:{
+    // backgroundColor:"red",
+    flexDirection:"row",
+    justifyContent:"flex-end",
+    paddingVertical:10,
+    paddingHorizontal:20
+  },
+  Balancecontainer:{
+     height: 'auto',
+    // marginTop:0,
+    // marginHorizontal:0,
+    flexDirection:'row',
+    justifyContent:"space-between",
+    alignItems:"center",
+    flex:1,
+    ///// height:100,
+    // marginVertical:0,
+    // paddingHorizontal:5,
+    borderRadius:18,
+    // elevation:7,
+  },
+  name:{
+    fontWeight:"bold",
+    fontSize:25,
+    color:'gold'
+  },
+  Accountbalance:{
+    // backgroundColor:"#021024",
+    // borderRadius:18,
+    height:'auto',
+
+    // height:100,
+    // marginVertical:5,
+    flexDirection:'row',
+    // elevation:10,
+    // padding:5,
+    // alignItems:"center",
+    // width:"20%",
+    // alignSelf:"center",
+  },
+  itemstories:{
+    // height:100,
+    width:"90%",
+    // marginVertical:10,
+    // alignItems:"center"
+    backgroundColor:'white',
+    marginVertical:10,
+    alignSelf:'center',
+    borderRadius:50,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    elevation:7,
+    padding:5
+  },
+  // Icons:{
+  //   flexDirection:"row",
+  //   justifyContent:"space-between"
+  // }
+
+   
+})
+export default HomeScreen;
+
+
+
+// import { View, Text, Modal, Image, TouchableOpacity, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+// import React, { useState } from 'react';
+// import QRCode from 'react-native-qrcode-svg';
+// import { StatusBar } from 'expo-status-bar';
+// import Icon from 'react-native-vector-icons/Ionicons';
+// import ActionComponents from 'src/components/ActionComponents';
+// import { SREEN_HEIGHT_2_ON_POURCENT, getIconSize } from 'src/screens/dimension';
+// import ActionComponentsForDeposit from 'src/components/actionComponentsForDeposit';
+// import { router } from 'expo-router';
+// import { useAuth } from 'src/hook/useAuth';
+
+// const HomeScreen = () => {
+//   const { user, logout } = useAuth();
+//   const [modalVisible, setModalVisible] = useState(false);
+  
+//   // Données pour le QR Code
+//   const qrValue = JSON.stringify({
+//     userId: user?.id_user,
+//     action: 'withdraw',
+//     timestamp: new Date().toISOString()
+//   });
+
+//   // Transactions récentes
+//   const recentTransaction = [
+//     // ... votre liste de transactions existante ...
+//   ];
+
+//   const renderItems = ({item}) => {
+//     return (
+//       <View style={styles.itemstories}>
+//         {/* ... votre rendu de transaction existant ... */}
+//       </View>
+//     )
+//   }
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <StatusBar style="light" />
+      
+//       {/* Section Balance */}
+//       <View style={styles.Balancecontainer}>
+//         <View style={styles.userInfo}>
+//           <Text style={{fontSize:20, color:'white'}}>Hello ,</Text>
+//           <Text style={styles.name}>{user?.nom || "Guest"}</Text>
+//         </View>
+
+//         <View style={styles.Accountbalance}>
+//           <ActionComponents 
+//             style={styles.actionButton} 
+//             onPress={() => logout()} 
+//             iconName="log-out-outline" 
+//             size={getIconSize()} 
+//             text={"Logout"}
+//           />
+          
+//           <ActionComponents 
+//             style={styles.actionButton} 
+//             onPress={() => setModalVisible(true)} 
+//             iconName="qr-code-outline" 
+//             size={getIconSize()} 
+//             text={"QR Code"}
+//           />
+//         </View>
+//       </View>
+
+//       {/* Modal QR Code */}
+//       <Modal
+//         animationType="fade"
+//         transparent={true}
+//         visible={modalVisible}
+//         onRequestClose={() => setModalVisible(false)}
+//       >
+//         <View style={styles.modalOverlay}>
+//           <View style={styles.modalContent}>
+//             <Text style={styles.modalTitle}>Scanner pour retrait</Text>
+            
+//             <View style={styles.qrContainer}>
+//               <QRCode
+//                 value={qrValue}
+//                 size={250}
+//                 color="#021024"
+//                 backgroundColor="white"
+//               />
+//             </View>
+            
+//             <Text style={styles.modalText}>
+//               Présentez ce code QR au guichet pour effectuer votre retrait
+//             </Text>
+            
+//             <TouchableOpacity
+//               style={styles.closeButton}
+//               onPress={() => setModalVisible(false)}
+//             >
+//               <Text style={styles.closeButtonText}>Fermer</Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       </Modal>
+
+//       {/* Liste des transactions */}
+//       <View style={styles.transactionSection}>
+//         <Text style={styles.sectionTitle}>RECENT TRANSACTIONS</Text>
+//         <FlatList
+//           data={recentTransaction}
+//           keyExtractor={item => item.id.toString()}
+//           renderItem={renderItems}
+//           contentContainerStyle={styles.transactionList}
+//         />
+//       </View>
+
+//       {/* Actions rapides */}
+//       <View style={styles.quickActions}>
+//         <ActionComponentsForDeposit 
+//           onPress={() => router.push("./Withdraw")} 
+//           iconName="cloud-download-outline" 
+//           size={getIconSize()} 
+//           text={"Withdraw"}
+//         />
+//         <ActionComponentsForDeposit 
+//           onPress={() => router.push("./Send")} 
+//           iconName="paper-plane-outline" 
+//           size={getIconSize()} 
+//           text={"Send"}
+//         />
+//         <ActionComponentsForDeposit 
+//           onPress={() => setModalVisible(true)} 
+//           iconName="scan-outline"  
+//           size={getIconSize()} 
+//           text={"Scan"}
+//         />
+//       </View>
+//     </SafeAreaView>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "white",
+//   },
+//   Balancecontainer: {
+//     flexDirection: 'row',
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     padding: 15,
+//     backgroundColor: "#07143F",
+//   },
+//   userInfo: {
+//     flex: 1,
+//     padding: 10,
+//   },
+//   name: {
+//     fontWeight: "bold",
+//     fontSize: 25,
+//     color: 'gold'
+//   },
+//   Accountbalance: {
+//     alignItems: 'flex-end',
+//   },
+//   actionButton: {
+//     marginVertical: 5,
+//   },
+//   modalOverlay: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0,0,0,0.7)',
+//   },
+//   modalContent: {
+//     width: '80%',
+//     backgroundColor: 'white',
+//     borderRadius: 20,
+//     padding: 25,
+//     alignItems: 'center',
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5,
+//   },
+//   modalTitle: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 15,
+//     color: '#021024',
+//   },
+//   qrContainer: {
+//     padding: 15,
+//     backgroundColor: 'white',
+//     marginBottom: 20,
+//     borderRadius: 10,
+//     borderWidth: 1,
+//     borderColor: '#eee',
+//   },
+//   modalText: {
+//     marginBottom: 20,
+//     textAlign: 'center',
+//     color: '#555',
+//     fontSize: 16,
+//   },
+//   closeButton: {
+//     backgroundColor: '#021024',
+//     borderRadius: 10,
+//     padding: 12,
+//     width: '100%',
+//     alignItems: 'center',
+//   },
+//   closeButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//     fontSize: 16,
+//   },
+//   transactionSection: {
+//     flex: 3,
+//     paddingTop: 15,
+//   },
+//   sectionTitle: {
+//     marginHorizontal: 15,
+//     fontWeight: "bold",
+//     fontSize: 18,
+//     color: '#021024',
+//   },
+//   itemstories: {
+//     width: "90%",
+//     backgroundColor: 'white',
+//     marginVertical: 10,
+//     alignSelf: 'center',
+//     borderRadius: 50,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     elevation: 3,
+//     padding: 12,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 1 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 2,
+//   },
+//   quickActions: {
+//     flexDirection: "row", 
+//     alignItems: "center", 
+//     justifyContent: 'space-evenly', 
+//     paddingVertical: 15,
+//     borderTopWidth: 1,
+//     borderTopColor: '#eee',
+//   },
+//   transactionList: {
+//     paddingBottom: 20,
+//   }
+// });
+
+// export default HomeScreen;
