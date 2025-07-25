@@ -109,6 +109,7 @@ const SignUpScreen = () => {
       } 
       catch (error) {
         console.log("Une erreur ait survenue lors de votre signup "+error)
+        alert("Echec: Verifiez le reseau")
       }
       }
       await signIn()
