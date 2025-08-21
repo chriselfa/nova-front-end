@@ -1,8 +1,8 @@
-import { Stack, Tabs,Slot,  Redirect } from 'expo-router';
-import { AuthProvider, useAuth } from '../../src/hook/useAuth';
-import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
+import { AuthProvider, useAuth } from '@/src/hook/useAuth';
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar, View, ActivityIndicator } from 'react-native';
+import { Stack, Tabs } from 'expo-router';
+import { StatusBar } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function RootLayout() {

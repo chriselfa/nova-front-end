@@ -1,12 +1,9 @@
-import { Stack, Tabs, Slot, Redirect } from "expo-router";
-import { AuthProvider, useAuth } from "../src/hook/useAuth";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { StatusBar, View, ActivityIndicator } from "react-native";
-import AppSQL from "../provider/AppSQL";
+import { AuthProvider } from "@/src/hook/useAuth";
+import { Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
-import { createContext } from "react";
-import AppContent from "./AppStuffs/AppContent";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
@@ -38,11 +35,42 @@ export default function RootLayout() {
       }}
       options={{ useNewConnection: true }}
     >
+   <StatusBar style="light" backgroundColor="#021024" /> 
+
       <AuthProvider>
-        <SafeAreaProvider>
-          <AppContent />
+        <SafeAreaProvider style={styles.safeArea}>
+          {/* <AppContent /> */}
+          <Stack screenOptions={{headerShown: false}}>
+            <Stack.Screen name="(auth)" options={{ 
+              headerShown: false
+            //   href: null,
+            }} />
+            <Stack.Screen name="(apps)" options={{
+              headerShown: false
+            //   href: null,
+             }} />
+            <Stack.Screen name="AppStuffs/AppContent" options={{
+              headerShown: false 
+            //   href: null,
+               }} />
+            <Stack.Screen name="db/utilities" options={{ 
+            headerShown: false
+            //   href: null,
+               }} />
+          </Stack>
         </SafeAreaProvider>
       </AuthProvider>
     </SQLiteProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  statusBar: {
+    backgroundColor: '#021024',
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#021024',
+    paddingTop: 10,
+  }
+});

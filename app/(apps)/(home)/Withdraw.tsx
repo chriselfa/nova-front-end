@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
-import { Formik } from 'formik';
-import InputText from 'src/components/login/InputText';
-import { validationSchemaTransfert } from 'schemas/CompteInfoValidationSchema';
-import handleSendMoney  from 'src/services/transaction/handletransaction';
-import { useAuth } from 'src/hook/useAuth';
+import { validationSchemaTransfert } from '@/schemas/CompteInfoValidationSchema';
+import InputText from '@/src/components/login/InputText';
+import { useAuth } from '@/src/hook/useAuth';
+import { API_URL_NEW_TRANSACTION } from '@/src/services/apiConfig';
+import axios from 'axios';
 import { router } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import uuid from 'react-native-uuid'
-import axios from 'axios';
-import { API_URL_NEW_TRANSACTION } from 'src/services/apiConfig';
+import { Formik } from 'formik';
+import React, { useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { v4 as uuid } from 'uuid';
+
 
 const Send = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,9 +41,9 @@ const Send = () => {
       // console.log(cleanedValues);
       
       const result = {success: true, message: "Terminee"}
-      //const result = await handleSendMoney(cleanedValues);
+      //const result =  await handleSendMoney(cleanedValues);
 
-      try{
+       try{
         const id = uuid.v4() //This is the transaction id
 
         //Now get the user id from the local Database
@@ -54,7 +54,7 @@ const Send = () => {
           name: `ID: ${id.slice(0, 20)}...`,
           date: new Date(Date.now()).toLocaleDateString(),
           price: cleanedValues.total,
-          type: 'depot',
+          type: 'retrait',
           userId: userId
         }
 
@@ -78,6 +78,41 @@ const Send = () => {
       }catch(error){
         console.log("Erreur l'ors de l'enregistrement de la transaction"+ error)
       }
+      /*
+      try{
+        const id = uuid.v4() //This is the transaction id
+
+        //Now get the user id from the local Database
+        const userId = await (await db.getAllAsync("SELECT * FROM Users;")).at(0)
+        console.log(`Adding a transaction for user : ${userId}`)
+
+        const values = {
+          name: `ID: ${id.slice(0, 20)}...`,
+          date: new Date(Date.now()).toLocaleDateString(),
+          price: cleanedValues.total,
+          type: 'retrait',
+          userId: userId
+        }
+
+        //Now with the user id, add a new transaction to the cloud database 
+        await axios.post(API_URL_NEW_TRANSACTION, { 
+          id, values
+        })
+
+        await db.runAsync("INSERT INTO Transactions VALUES(?,?,?,?,?)",
+          id,
+          values.name,
+          values.date,
+          values.price,
+          values.type
+        )
+
+        console.log('Added new transaction')
+
+      }catch(error){
+        console.log("Erreur l'ors de l'enregistrement de la transaction"+error)
+      }*/
+
       
       if (result.success) {
         Alert.alert('Succès', 'Transaction effectuée avec succès');
@@ -139,7 +174,7 @@ const Send = () => {
                 </View>
                 <View style={{ paddingVertical: 5 }}>
                   <InputText
-                    placeholder={"+2376 00 00 00 00"}
+                    placeholder={"6 00 00 00 00"}
                     value={values.phone}
                     onChangeText={handleChange('phone')}
                     onBlur={handleBlur('phone')}
@@ -168,7 +203,7 @@ const Send = () => {
             <View style={{ backgroundColor: '#F0F0F0', borderRadius: 15, padding: 20, marginBottom: 30 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 }}>
                 <Text style={{ fontSize: 16 }}>Destinataire:</Text>
-                <Text style={{ fontSize: 16, fontWeight: '500' }}>Nova</Text>
+                <Text style={{ fontSize: 16, fontWeight: '500' }}>{transactionDetails.phone}</Text>
                 {/* <Text style={{ fontSize: 16, fontWeight: '500' }}>{transactionDetails.phone}</Text> */}
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 }}>
@@ -243,5 +278,3 @@ const styles = StyleSheet.create({
 
 export default Send;
 
-
-       

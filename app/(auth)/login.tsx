@@ -1,22 +1,19 @@
+import { validationSchemaconnexion } from "@/schemas/CompteInfoValidationSchema";
+import InputText from "@/src/components/login/InputText";
+import TextPassword from "@/src/components/login/TextPassword";
+import handleLogin from "@/src/services/handle_login/handleLogin";
+import { Link } from "expo-router";
+import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
-  Alert,
+  View
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { Formik } from "formik";
 import Icon from "react-native-vector-icons/Ionicons";
-import InputText from "src/components/login/InputText";
-import TextPassword from "src/components/login/TextPassword";
-import { Link } from "expo-router";
-import { validationSchemaconnexion } from "schemas/CompteInfoValidationSchema";
-import handleLogin from "src/services/handle_login/handleLogin";
 
-import { useAuth, AuthProvider } from "src/hook/useAuth"; // Importez le hook useAuth
+import { useAuth } from "@/src/hook/useAuth"; // Importez le hook useAuth
 import { useSQLiteContext } from "expo-sqlite";
 
 const LoginScreen = () => {

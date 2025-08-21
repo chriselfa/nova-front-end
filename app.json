@@ -1,75 +1,49 @@
 {
   "expo": {
     "name": "Nova",
-    "newArchEnabled": true,
-    "scheme": "nova",
-    "owner": "chriselfa",
-    "slug": "nova",
+    "slug": "Nova",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "jsEngine": "hermes",
-    "react": {
-      "newArchEnabled": true
-    },
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "icon": "@/src/assets/images/icon.png",
+    "scheme": "nova",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.chriselfa.nova"
+      "supportsTablet": true
     },
     "android": {
-      "permissions": [
-        "INTERNET"
-      ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "@/src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.chriselfa.nova",
-      "versionCode": 1
+      "edgeToEdgeEnabled": true,
+      "package": "com.chriselfa.Nova"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "d8b53c03-4ecf-40f8-92cf-bb5b762dbdc0"
-      }
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "@/src/assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
-      "expo-font",
-      "expo-secure-store",
       [
-        "expo-sqlite",
+        "expo-splash-screen",
         {
-          "enableFTS": true,
-          "useSQLCipher": true,
-          "android": {
-            "enableFTS": false,
-            "useSQLCipher": false
-          },
-          "ios": {
-            "customBuildFlags": [
-              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
-            ]
-          }
+          "image": "@/src/assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
         }
       ]
     ],
     "experiments": {
-      "tsconfigPaths": true
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "754c4d19-ee17-4cb2-872e-0750e38f7f49"
+      }
     }
   }
 }

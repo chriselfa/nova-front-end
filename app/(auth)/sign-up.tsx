@@ -1,33 +1,27 @@
 import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-  Alert
+  View
 } from "react-native";
 
-import { Redirect, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Formik } from "formik";
-import Icon from "react-native-vector-icons/Ionicons";
-import { validationSchemaCompte } from "schemas/CompteInfoValidationSchema";
-import handleSignUp from "src/services/handle_login/handleSignup";
-import InputText from "src/components/login/InputText";
-import InputDate from "src/components/InputDate";
-import TextPassword from "src/components/login/TextPassword";
-import { Link } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import FormField from "../../src/components/FormField";
-import { date } from "yup";
-import { useSQLiteContext } from "expo-sqlite";
-import uuid from 'react-native-uuid'
+import { validationSchemaCompte } from "@/schemas/CompteInfoValidationSchema";
+import FormField from "@/src/components/FormField";
+import InputText from "@/src/components/login/InputText";
+import { API_URL_SIGNUP } from "@/src/services/apiConfig";
 import axios from "axios";
-import { API_URL_SIGNUP } from "src/services/apiConfig";
+import { LinearGradient } from "expo-linear-gradient";
+import { Link, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import { v4 as uuid } from 'uuid';
+// import IcoIcfnom "reareact-nvt-ve-vec-ic-nsononIonnc";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const SignUpScreen = () => {
   const [isLoading, setIsLoading] = useState(false);

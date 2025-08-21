@@ -1,35 +1,22 @@
-import QrModal from "src/components/QrModal";
+import QrModal from "@/src/components/QrModal";
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Button,
-  FlatList,
-  SafeAreaView,
-  Dimensions,
   Alert,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
 
+import ActionComponents from "@/src/components/ActionComponents";
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import Icon from "react-native-vector-icons/Ionicons";
-import ActionComponents from "src/components/ActionComponents";
 
+import ActionComponentsForDeposit from "@/src/components/actionComponentsForDeposit";
+import { useAuth } from "@/src/hook/useAuth";
 import {
-  SREEN_HEIGHT_0_ON_POURCENT,
-  SREEN_HEIGHT_1_ON_POURCENT,
   SREEN_HEIGHT_2_ON_POURCENT,
-  SREEN_HEIGHT_3_ON_POURCENT,
-  getIconSize,
-} from "src/screens/dimension";
-import ActionComponentsForDeposit from "src/components/actionComponentsForDeposit";
-import { Link, router } from "expo-router";
-import { useAuth } from "src/hook/useAuth";
-import { ouvrirLaDB, creerLesTables } from "app/db/database";
-import AppSQL from "provider/AppSQL";
-import { AppSQLContext } from "provider/AppSQL";
+  getIconSize
+} from "@/src/screens/dimension";
 import { useSQLiteContext } from "expo-sqlite";
 
 interface TransactionProps {
@@ -144,7 +131,11 @@ const HomeScreen = ({}) => {
         titleTextStyle={{ color: "gold" }}
         qrColor="gold"
         qrBackgroundColor="#07143F"
-        qrLogo={require("src/assets/icon.png")}
+        // qrLogo={require("@/src/assets/icon.png")}
+        // qrLogo={require("@/src/assets/icon.png")}
+        // qrLogoSize={100}
+        // qrLogoBackgroundColor="white"
+        // qrLogoMargin={10}
         descriptionTextStyle={{ color: "white" }}
         closeButtonBackgroundColor="gold"
         closeButtonTextColor="#07143F"
