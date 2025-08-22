@@ -131,11 +131,10 @@ const HomeScreen = ({}) => {
         titleTextStyle={{ color: "gold" }}
         qrColor="gold"
         qrBackgroundColor="#07143F"
-        // qrLogo={require("@/src/assets/icon.png")}
-        // qrLogo={require("@/src/assets/icon.png")}
-        // qrLogoSize={100}
-        // qrLogoBackgroundColor="white"
-        // qrLogoMargin={10}
+        qrLogo={require("@/src/assets/images/icon.png")}
+        qrLogoSize={100}
+        qrLogoBackgroundColor="white"
+        qrLogoMargin={10}
         descriptionTextStyle={{ color: "white" }}
         closeButtonBackgroundColor="gold"
         closeButtonTextColor="#07143F"
